@@ -53,24 +53,33 @@ namespace CasoEstudioUnidad2
 
         private static void IngresarLectura()
         {
-            Console.WriteLine("Ingresar  NumeroDelMedidor|Fecha|ValorConsumo");
-            string ingreso_datos = Console.ReadLine().Trim();
-            string[] datos = ingreso_datos.Split('|', '|', '|');
-
-            int num = Convert.ToInt32(datos[0]);
-            string fecha = Convert.ToString(datos[1]);
-            decimal valor = Convert.ToDecimal(datos[2]);
-
-            Medidor medidor = new Medidor()
+            try 
             {
-                NroMedidor = num,
-                Fecha = DateTime.Parse(fecha),
-                ValorConsumo = valor
-            };
-            lock (medidorDAL)
+                Console.WriteLine("Ingresar  NumeroDelMedidor|Fecha|ValorConsumo");
+                string ingreso_datos = Console.ReadLine().Trim();
+                string[] datos = ingreso_datos.Split('|', '|', '|');
+
+                int num = Convert.ToInt32(datos[0]);
+                string fecha = Convert.ToString(datos[1]);
+                decimal valor = Convert.ToDecimal(datos[2]);
+
+                Medidor medidor = new Medidor()
+                {
+                    NroMedidor = num,
+                    Fecha = DateTime.Parse(fecha),
+                    ValorConsumo = valor
+                };
+                lock (medidorDAL)
+                {
+                    medidorDAL.AgregarMedidor(medidor);
+                }
+            } 
+            catch (Exception e)
             {
-                medidorDAL.AgregarMedidor(medidor);
+                Console.WriteLine("Datos mal ingresados");
+
             }
+            
 
 
         }

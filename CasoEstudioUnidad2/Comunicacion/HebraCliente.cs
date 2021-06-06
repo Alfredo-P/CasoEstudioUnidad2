@@ -21,27 +21,35 @@ namespace CasoEstudioUnidad2.Comunicacion
 
         public void Ejecutar()
         {
-            clienteCom.Escribir("Ingrese Numero de medidor");
-            string numero = clienteCom.Leer();
-            clienteCom.Escribir("Ingrese fecha con formato yyyy/Mm/Dd HH:mm:ss");
-            string fecha = clienteCom.Leer();
-            clienteCom.Escribir("Ingrese valor de consumo");
-            string valor = clienteCom.Leer();
-
-
-            Medidor medidor = new Medidor()
+            try 
             {
-                NroMedidor = Convert.ToInt32(numero),
-                Fecha = DateTime.Parse(fecha), 
-                ValorConsumo = Convert.ToDecimal(valor)
-            };
+                clienteCom.Escribir("Ingrese Numero de medidor");
+                string numero = clienteCom.Leer();
+                clienteCom.Escribir("Ingrese fecha con formato yyyy/Mm/Dd HH:mm:ss");
+                string fecha = clienteCom.Leer();
+                clienteCom.Escribir("Ingrese valor de consumo");
+                string valor = clienteCom.Leer();
 
-            lock (medidorDAL) 
+
+                Medidor medidor = new Medidor()
+                {
+                    NroMedidor = Convert.ToInt32(numero),
+                    Fecha = DateTime.Parse(fecha),
+                    ValorConsumo = Convert.ToDecimal(valor)
+                };
+
+                lock (medidorDAL)
+                {
+                    medidorDAL.AgregarMedidor(medidor);
+                }
+                clienteCom.Escribir("Datos Ingresados correctamente.");
+                clienteCom.Desconectar();
+            } catch (Exception e)
             {
-                medidorDAL.AgregarMedidor(medidor);
+                clienteCom.Escribir(e.Message);
+                clienteCom.Desconectar();
             }
-            clienteCom.Escribir("Datos Ingresados correctamente.");
-            clienteCom.Desconectar();
+          
             
         }
 
